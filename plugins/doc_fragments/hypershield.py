@@ -22,7 +22,6 @@ options:
       - Can also be set via the C(HYPERSHIELD_API_KEY) environment variable.
     type: str
     required: true
-    no_log: true
   validate_certs:
     description:
       - Whether to validate TLS certificates when connecting to the API.

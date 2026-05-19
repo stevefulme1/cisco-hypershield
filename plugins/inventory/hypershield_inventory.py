@@ -38,7 +38,6 @@ options:
       - Can also be set via the C(HYPERSHIELD_API_KEY) environment variable.
     type: str
     required: true
-    no_log: true
     env:
       - name: HYPERSHIELD_API_KEY
   validate_certs:

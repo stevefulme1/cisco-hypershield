@@ -56,7 +56,6 @@ options:
       - Passphrase for backup encryption.
       - Required when I(encryption_enabled) is true and I(state) is C(present) or C(restored).
     type: str
-    no_log: true
   retention_days:
     description:
       - Number of days to retain the backup before automatic deletion.

@@ -47,7 +47,6 @@ options:
       - Pre-shared registration token for agent enrollment.
       - If not provided when I(state=registered), a new token is generated.
     type: str
-    no_log: true
   token_name:
     description:
       - Name for the registration token when I(state=token).

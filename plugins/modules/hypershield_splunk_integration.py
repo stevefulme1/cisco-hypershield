@@ -35,7 +35,6 @@ options:
     description:
       - Splunk HEC authentication token.
     type: str
-    no_log: true
   index:
     description:
       - Default Splunk index for Hypershield events.
