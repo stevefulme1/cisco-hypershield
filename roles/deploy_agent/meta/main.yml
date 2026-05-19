@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: deploy_agent
+  role_name: deployagent
   author: Steve Fulmer
   description: End-to-end Cisco Hypershield Tesseract agent deployment
   company: Red Hat

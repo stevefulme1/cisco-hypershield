@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: baseline_policy
+  role_name: baselinepolicy
   author: Steve Fulmer
   description: Baseline microsegmentation and zone policy configuration for Cisco Hypershield
   company: Red Hat

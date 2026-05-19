@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: dpu_setup
+  role_name: dpusetup
   author: Steve Fulmer
   description: NVIDIA BlueField DPU security configuration for Cisco Hypershield
   company: Red Hat
