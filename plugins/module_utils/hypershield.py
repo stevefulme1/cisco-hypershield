@@ -33,6 +33,15 @@ class HypershieldAPI(object):
     for all Hypershield modules.
     """
 
+    @staticmethod
+    def hypershield_argument_spec():
+        return dict(
+            api_url=dict(type="str", required=True),
+            api_key=dict(type="str", required=True, no_log=True),
+            validate_certs=dict(type="bool", default=True),
+            timeout=dict(type="int", default=30),
+        )
+
     def __init__(self, module):
         """Initialize the API client from an AnsibleModule instance.
 

@@ -244,10 +244,8 @@ def main():
                     gaps = api.get("/compliance/reports/{0}/gaps".format(final["id"]))
                     result["gap_analysis"] = gaps
             else:
-                module.fail_json(
-                    msg="Report generation timed out after {0}s".format(module.params["wait_timeout"]),
-                    **result,
-                )
+                result["msg"] = "Report generation timed out after {0}s".format(module.params["wait_timeout"])
+                module.fail_json(**result)
         else:
             result["report"] = report
 
