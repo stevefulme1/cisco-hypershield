@@ -49,7 +49,8 @@ def api_mock():
 class TestHypershieldMicrosegmentationPolicy:
     def test_create_policy(self, module_mock, api_mock):
         """Creating a new microsegmentation policy sets changed=True."""
-        from ansible_collections.stevefulme1.cisco_hypershield.plugins.modules import hypershield_microsegmentation_policy
+        from ansible_collections.stevefulme1.cisco_hypershield.plugins.modules \
+            import hypershield_microsegmentation_policy
 
         api_mock.get.return_value = {"items": []}
         api_mock.post.return_value = {"id": "pol-1", "name": "db-isolation"}
@@ -60,7 +61,8 @@ class TestHypershieldMicrosegmentationPolicy:
 
     def test_policy_no_change(self, module_mock, api_mock):
         """Existing matching policy yields changed=False."""
-        from ansible_collections.stevefulme1.cisco_hypershield.plugins.modules import hypershield_microsegmentation_policy
+        from ansible_collections.stevefulme1.cisco_hypershield.plugins.modules \
+            import hypershield_microsegmentation_policy
 
         existing = {
             "id": "pol-1", "name": "db-isolation",
@@ -78,7 +80,8 @@ class TestHypershieldMicrosegmentationPolicy:
 
     def test_delete_policy(self, module_mock, api_mock):
         """Deleting an existing policy calls DELETE."""
-        from ansible_collections.stevefulme1.cisco_hypershield.plugins.modules import hypershield_microsegmentation_policy
+        from ansible_collections.stevefulme1.cisco_hypershield.plugins.modules \
+            import hypershield_microsegmentation_policy
 
         module_mock.params["state"] = "absent"
         existing = {"id": "pol-1", "name": "db-isolation"}
@@ -89,7 +92,8 @@ class TestHypershieldMicrosegmentationPolicy:
 
     def test_update_policy(self, module_mock, api_mock):
         """Updating policy ports triggers a PUT."""
-        from ansible_collections.stevefulme1.cisco_hypershield.plugins.modules import hypershield_microsegmentation_policy
+        from ansible_collections.stevefulme1.cisco_hypershield.plugins.modules \
+            import hypershield_microsegmentation_policy
 
         existing = {
             "id": "pol-1", "name": "db-isolation",
@@ -108,7 +112,8 @@ class TestHypershieldMicrosegmentationPolicy:
 
     def test_check_mode_create(self, module_mock, api_mock):
         """Check mode does not create but reports changed."""
-        from ansible_collections.stevefulme1.cisco_hypershield.plugins.modules import hypershield_microsegmentation_policy
+        from ansible_collections.stevefulme1.cisco_hypershield.plugins.modules \
+            import hypershield_microsegmentation_policy
 
         module_mock.check_mode = True
         api_mock.get.return_value = {"items": []}
