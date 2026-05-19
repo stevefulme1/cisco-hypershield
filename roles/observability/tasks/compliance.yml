@@ -1,0 +1,26 @@
+---
+- name: Validate compliance frameworks
+  ansible.builtin.assert:
+    that:
+      - item in hypershield_valid_compliance_frameworks
+    fail_msg: >-
+      Invalid compliance framework '{{ item }}'.
+      Valid: {{ hypershield_valid_compliance_frameworks | join(', ') }}
+  loop: "{{ hypershield_compliance_frameworks }}"
+
+- name: Generate compliance reports
+  stevefulme1.cisco_hypershield.hypershield_compliance_report:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    framework: "{{ item }}"
+    dashboard_enabled: true
+    state: present
+  loop: "{{ hypershield_compliance_frameworks }}"
+  loop_control:
+    label: "{{ item }}"
+
+- name: Report compliance dashboard status
+  ansible.builtin.debug:
+    msg: >-
+      Compliance dashboards configured for:
+      {{ hypershield_compliance_frameworks | join(', ') }}

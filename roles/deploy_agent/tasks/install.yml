@@ -1,0 +1,24 @@
+---
+- name: Install Hypershield agent package (RHEL/CentOS)
+  ansible.builtin.dnf:
+    name: "{{ hypershield_agent_package }}-{{ hypershield_agent_version }}"
+    state: present
+  become: true
+  when: ansible_os_family == "RedHat"
+
+- name: Install Hypershield agent package (Debian/Ubuntu)
+  ansible.builtin.apt:
+    name: "{{ hypershield_agent_package }}={{ hypershield_agent_version }}"
+    state: present
+    update_cache: true
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Ensure agent configuration directory exists
+  ansible.builtin.file:
+    path: "{{ hypershield_agent_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: true

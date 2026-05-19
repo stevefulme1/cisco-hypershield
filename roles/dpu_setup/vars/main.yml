@@ -1,0 +1,8 @@
+---
+# Internal variables - do not override
+
+hypershield_dpu_config_dir: "/etc/hypershield/dpu"
+hypershield_dpu_firmware_path: "/opt/mellanox/firmware"
+hypershield_dpu_supported_devices:
+  - "bluefield-2"
+  - "bluefield-3"

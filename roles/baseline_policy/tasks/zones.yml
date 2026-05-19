@@ -1,0 +1,23 @@
+---
+- name: Create security zones
+  stevefulme1.cisco_hypershield.hypershield_zone_policy:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    name: "{{ item.name }}"
+    description: "{{ item.description | default('') }}"
+    labels: "{{ item.labels | default({}) }}"
+    state: present
+  loop: "{{ hypershield_zones }}"
+  loop_control:
+    label: "{{ item.name }}"
+  notify: Reload zone policies
+
+- name: Retrieve current zone configuration
+  stevefulme1.cisco_hypershield.hypershield_zone_policy_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+  register: _zone_info
+
+- name: Report zone configuration
+  ansible.builtin.debug:
+    msg: "Configured {{ _zone_info.zones | default([]) | length }} security zones"

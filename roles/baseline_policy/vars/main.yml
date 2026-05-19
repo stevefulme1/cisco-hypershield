@@ -1,0 +1,11 @@
+---
+# Internal variables - do not override
+
+hypershield_valid_policy_actions:
+  - "allow"
+  - "deny"
+  - "log"
+hypershield_valid_policy_modes:
+  - "observe"
+  - "enforce"
+  - "disabled"

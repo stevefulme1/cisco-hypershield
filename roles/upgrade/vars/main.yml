@@ -1,0 +1,11 @@
+---
+# Internal variables - do not override
+
+hypershield_upgrade_states:
+  - "pending"
+  - "canary"
+  - "validating"
+  - "promoting"
+  - "complete"
+  - "rolled_back"
+  - "failed"

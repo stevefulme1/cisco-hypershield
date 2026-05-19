@@ -1,0 +1,53 @@
+---
+# Baseline microsegmentation and zone policy defaults
+
+# Management plane connection
+hypershield_management_plane_url: "https://hypershield.example.com"
+hypershield_api_token: ""
+
+# Policy mode
+hypershield_policy_mode: "observe"  # observe, enforce, disabled
+hypershield_auto_approve_high_confidence: false
+hypershield_confidence_threshold: 90  # minimum confidence for auto-approve
+
+# Discovery
+hypershield_discovery_enabled: true
+hypershield_discovery_duration: 86400  # seconds (24 hours)
+hypershield_discovery_protocols:
+  - tcp
+  - udp
+
+# Microsegmentation policies
+hypershield_default_policy_action: "allow"  # allow, deny, log
+hypershield_policies: []
+# Example:
+#   - name: "web-to-app"
+#     source_zone: "web"
+#     destination_zone: "app"
+#     protocol: "tcp"
+#     ports: [8080, 8443]
+#     action: "allow"
+
+# Security zones
+hypershield_zones: []
+# Example:
+#   - name: "web"
+#     description: "Web tier"
+#     labels:
+#       tier: web
+#   - name: "app"
+#     description: "Application tier"
+#     labels:
+#       tier: app
+
+# Inter-zone rules
+hypershield_inter_zone_default_action: "deny"
+hypershield_inter_zone_rules: []
+# Example:
+#   - source_zone: "web"
+#     destination_zone: "app"
+#     action: "allow"
+
+# Monitoring
+hypershield_policy_monitoring_enabled: true
+hypershield_policy_log_denied: true

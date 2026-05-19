@@ -1,0 +1,34 @@
+---
+- name: Verify telemetry data pipeline
+  stevefulme1.cisco_hypershield.hypershield_telemetry_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    include_pipeline_status: true
+  register: _pipeline_status
+
+- name: Assert telemetry pipeline is healthy
+  ansible.builtin.assert:
+    that:
+      - _pipeline_status.pipeline_healthy | default(false)
+    fail_msg: >-
+      Telemetry pipeline is not healthy.
+      Status: {{ _pipeline_status.pipeline_status | default('unknown') }},
+      Errors: {{ _pipeline_status.pipeline_errors | default([]) | join(', ') }}
+    success_msg: "Telemetry pipeline is healthy"
+
+- name: Verify Splunk data flow
+  stevefulme1.cisco_hypershield.hypershield_splunk_integration:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    action: test_connection
+  register: _splunk_test
+  when: hypershield_splunk_enabled | bool
+
+- name: Report pipeline verification
+  ansible.builtin.debug:
+    msg: >-
+      Data pipeline verified.
+      Telemetry: {{ 'healthy' if _pipeline_status.pipeline_healthy | default(false) else 'unhealthy' }},
+      Splunk: {{ 'connected' if (_splunk_test.connected | default(false)) else 'not configured' }},
+      Events buffered: {{ _pipeline_status.events_buffered | default(0) }},
+      Events sent: {{ _pipeline_status.events_sent | default(0) }}

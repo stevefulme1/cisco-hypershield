@@ -1,0 +1,30 @@
+---
+- name: Retrieve AI policy recommendations
+  stevefulme1.cisco_hypershield.hypershield_policy_recommendation_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+  register: _recommendations
+
+- name: Display policy recommendations summary
+  ansible.builtin.debug:
+    msg: >-
+      AI recommendations:
+      Total: {{ _recommendations.recommendations | default([]) | length }},
+      High confidence: {{ _recommendations.recommendations | default([])
+        | selectattr('confidence', 'ge', hypershield_confidence_threshold)
+        | list | length }}
+
+- name: Auto-approve high-confidence recommendations
+  stevefulme1.cisco_hypershield.hypershield_policy_recommendation_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    approve_above_confidence: "{{ hypershield_confidence_threshold }}"
+  when: hypershield_auto_approve_high_confidence | bool
+  register: _auto_approved
+
+- name: Report auto-approved policies
+  ansible.builtin.debug:
+    msg: >-
+      Auto-approved {{ _auto_approved.approved_count | default(0) }}
+      high-confidence policy recommendations
+  when: hypershield_auto_approve_high_confidence | bool

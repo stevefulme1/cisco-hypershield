@@ -1,0 +1,11 @@
+---
+- name: Configure Hypershield agent
+  stevefulme1.cisco_hypershield.hypershield_agent:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    enforcement_mode: "{{ hypershield_enforcement_mode }}"
+    telemetry_enabled: "{{ hypershield_telemetry_enabled }}"
+    telemetry_interval: "{{ hypershield_telemetry_interval }}"
+    log_level: "{{ hypershield_log_level }}"
+    state: present
+  notify: Restart hypershield agent

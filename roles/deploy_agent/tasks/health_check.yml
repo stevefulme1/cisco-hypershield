@@ -1,0 +1,17 @@
+---
+- name: Wait for agent to become healthy
+  stevefulme1.cisco_hypershield.hypershield_agent_health_check:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+  register: _health_result
+  until: _health_result.healthy | default(false)
+  retries: "{{ hypershield_health_check_retries }}"
+  delay: "{{ hypershield_health_check_delay }}"
+
+- name: Report agent health status
+  ansible.builtin.debug:
+    msg: >-
+      Agent health check passed.
+      Agent ID: {{ _health_result.agent_id | default('unknown') }},
+      Status: {{ _health_result.status | default('unknown') }},
+      Mode: {{ hypershield_enforcement_mode }}

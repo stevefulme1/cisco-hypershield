@@ -1,0 +1,81 @@
+---
+- name: Create a zone policy
+  stevefulme1.cisco_hypershield.hypershield_zone_policy:
+    api_url: "{{ hypershield_api_url }}"
+    api_key: "{{ hypershield_api_key }}"
+    validate_certs: "{{ hypershield_validate_certs }}"
+    name: ci-dmz-to-internal
+    state: present
+    source_zone: dmz
+    destination_zone: internal
+    protocol: tcp
+    ports:
+      - 443
+    action: allow
+    log_enabled: true
+    description: Integration test zone policy
+  register: create_result
+
+- name: Verify zone policy was created
+  ansible.builtin.assert:
+    that:
+      - create_result is changed
+      - create_result.policy.name == 'ci-dmz-to-internal'
+
+- name: Create same zone policy again (idempotency)
+  stevefulme1.cisco_hypershield.hypershield_zone_policy:
+    api_url: "{{ hypershield_api_url }}"
+    api_key: "{{ hypershield_api_key }}"
+    validate_certs: "{{ hypershield_validate_certs }}"
+    name: ci-dmz-to-internal
+    state: present
+    source_zone: dmz
+    destination_zone: internal
+    protocol: tcp
+    ports:
+      - 443
+    action: allow
+    log_enabled: true
+    description: Integration test zone policy
+  register: idem_result
+
+- name: Verify idempotency
+  ansible.builtin.assert:
+    that:
+      - idem_result is not changed
+
+- name: Update zone policy to add port
+  stevefulme1.cisco_hypershield.hypershield_zone_policy:
+    api_url: "{{ hypershield_api_url }}"
+    api_key: "{{ hypershield_api_key }}"
+    validate_certs: "{{ hypershield_validate_certs }}"
+    name: ci-dmz-to-internal
+    state: present
+    source_zone: dmz
+    destination_zone: internal
+    protocol: tcp
+    ports:
+      - 443
+      - 8443
+    action: allow
+    log_enabled: true
+  register: update_result
+
+- name: Verify zone policy was updated
+  ansible.builtin.assert:
+    that:
+      - update_result is changed
+
+- name: Delete the zone policy
+  stevefulme1.cisco_hypershield.hypershield_zone_policy:
+    api_url: "{{ hypershield_api_url }}"
+    api_key: "{{ hypershield_api_key }}"
+    validate_certs: "{{ hypershield_validate_certs }}"
+    name: ci-dmz-to-internal
+    state: absent
+  register: delete_result
+
+- name: Verify zone policy was deleted
+  ansible.builtin.assert:
+    that:
+      - delete_result is changed

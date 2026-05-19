@@ -1,0 +1,21 @@
+---
+# Hypershield Tesseract Agent Deployment
+
+- name: Validate prerequisites
+  ansible.builtin.include_tasks: prerequisites.yml
+
+- name: Install agent package
+  ansible.builtin.include_tasks: install.yml
+
+- name: Configure agent
+  ansible.builtin.include_tasks: configure.yml
+
+- name: Register agent with management plane
+  ansible.builtin.include_tasks: register.yml
+  when: hypershield_auto_register | bool
+
+- name: Start agent service
+  ansible.builtin.include_tasks: service.yml
+
+- name: Verify agent health
+  ansible.builtin.include_tasks: health_check.yml

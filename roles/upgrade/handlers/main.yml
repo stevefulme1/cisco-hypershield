@@ -1,0 +1,14 @@
+---
+- name: Trigger rollback
+  stevefulme1.cisco_hypershield.hypershield_dual_dataplane:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    action: rollback
+    timeout: "{{ hypershield_rollback_timeout }}"
+  when: hypershield_rollback_on_failure | bool
+
+- name: Clean up shadow dataplane
+  stevefulme1.cisco_hypershield.hypershield_dual_dataplane:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    action: cleanup_shadow

@@ -1,0 +1,12 @@
+---
+- name: Restart DPU agent
+  ansible.builtin.service:
+    name: "{{ hypershield_dpu_service_name }}"
+    state: restarted
+  become: true
+
+- name: Reload DPU offload policies
+  stevefulme1.cisco_hypershield.hypershield_dpu_config:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    action: reload_policies

@@ -1,0 +1,26 @@
+---
+galaxy_info:
+  role_name: deploy_agent
+  author: Steve Fulmer
+  description: End-to-end Cisco Hypershield Tesseract agent deployment
+  company: Red Hat
+  license: GPL-3.0-or-later
+  min_ansible_version: "2.15"
+  platforms:
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+  galaxy_tags:
+    - cisco
+    - hypershield
+    - security
+    - agent
+    - ebpf
+
+dependencies: []

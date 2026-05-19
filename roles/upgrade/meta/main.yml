@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  role_name: upgrade
+  author: Steve Fulmer
+  description: Orchestrated Hypershield agent upgrade via dual-dataplane
+  company: Red Hat
+  license: GPL-3.0-or-later
+  min_ansible_version: "2.15"
+  platforms:
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+  galaxy_tags:
+    - cisco
+    - hypershield
+    - upgrade
+    - dual_dataplane
+    - canary
+    - security
+
+dependencies: []

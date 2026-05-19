@@ -1,0 +1,12 @@
+---
+- name: Reload microsegmentation policies
+  stevefulme1.cisco_hypershield.hypershield_microsegmentation_policy:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    action: reload
+
+- name: Reload zone policies
+  stevefulme1.cisco_hypershield.hypershield_zone_policy:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    action: reload

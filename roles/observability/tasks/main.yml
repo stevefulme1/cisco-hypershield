@@ -1,0 +1,20 @@
+---
+# Complete Telemetry and Monitoring Setup
+
+- name: Configure telemetry collection
+  ansible.builtin.include_tasks: telemetry.yml
+
+- name: Set up Splunk HEC integration
+  ansible.builtin.include_tasks: splunk.yml
+  when: hypershield_splunk_enabled | bool
+
+- name: Create alerting rules
+  ansible.builtin.include_tasks: alerting.yml
+  when: hypershield_alerting_enabled | bool
+
+- name: Configure compliance dashboards
+  ansible.builtin.include_tasks: compliance.yml
+  when: hypershield_compliance_dashboards_enabled | bool
+
+- name: Verify data pipeline
+  ansible.builtin.include_tasks: verify_pipeline.yml

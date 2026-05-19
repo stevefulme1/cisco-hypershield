@@ -1,0 +1,22 @@
+---
+- name: Verify DPU offload is active
+  stevefulme1.cisco_hypershield.hypershield_dpu_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+  register: _verify_result
+
+- name: Assert offload is operational
+  ansible.builtin.assert:
+    that:
+      - _verify_result.offload_active | default(false)
+    fail_msg: "DPU offload is not active after configuration"
+    success_msg: "DPU offload is active and operational"
+
+- name: Report final DPU status
+  ansible.builtin.debug:
+    msg: >-
+      DPU setup complete.
+      Device: {{ _verify_result.device_type | default('unknown') }},
+      Firmware: {{ _verify_result.firmware_version | default('unknown') }},
+      Offload: {{ _verify_result.offload_mode | default('unknown') }},
+      Status: {{ _verify_result.status | default('unknown') }}

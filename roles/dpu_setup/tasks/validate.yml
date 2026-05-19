@@ -1,0 +1,37 @@
+---
+- name: Gather DPU hardware information
+  stevefulme1.cisco_hypershield.hypershield_dpu_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+  register: _dpu_info
+
+- name: Validate DPU device type is supported
+  ansible.builtin.assert:
+    that:
+      - _dpu_info.device_type in hypershield_dpu_supported_devices
+    fail_msg: >-
+      DPU device type '{{ _dpu_info.device_type | default("unknown") }}'
+      is not supported. Supported: {{ hypershield_dpu_supported_devices | join(', ') }}
+    success_msg: "DPU device type '{{ _dpu_info.device_type }}' is supported"
+
+- name: Validate firmware version meets minimum
+  ansible.builtin.assert:
+    that:
+      - _dpu_info.firmware_version is version(hypershield_min_firmware_version, '>=')
+    fail_msg: >-
+      DPU firmware {{ _dpu_info.firmware_version | default('unknown') }}
+      does not meet minimum {{ hypershield_min_firmware_version }}
+    success_msg: "DPU firmware {{ _dpu_info.firmware_version }} meets requirements"
+
+- name: Verify DPU ARM cores are accessible
+  ansible.builtin.command:
+    cmd: "ping -c 1 -W 5 {{ hypershield_dpu_management_interface }}"
+  register: _dpu_ping
+  changed_when: false
+  failed_when: _dpu_ping.rc != 0
+  ignore_errors: true
+
+- name: Report DPU accessibility
+  ansible.builtin.debug:
+    msg: "DPU management interface {{ hypershield_dpu_management_interface }} is reachable"
+  when: _dpu_ping.rc == 0

@@ -1,0 +1,56 @@
+---
+# Complete telemetry and monitoring setup defaults
+
+# Management plane connection
+hypershield_management_plane_url: "https://hypershield.example.com"
+hypershield_api_token: ""
+
+# Telemetry collection
+hypershield_telemetry_enabled: true
+hypershield_telemetry_interval: 60  # seconds
+hypershield_telemetry_metrics:
+  - agent_health
+  - policy_hits
+  - traffic_flows
+  - exploit_attempts
+  - threat_events
+  - dpu_performance
+
+# Splunk HEC integration
+hypershield_splunk_enabled: true
+hypershield_splunk_hec_url: "https://splunk.example.com:8088"
+hypershield_splunk_hec_token: ""
+hypershield_splunk_index: "hypershield"
+hypershield_splunk_source: "cisco:hypershield"
+hypershield_splunk_sourcetype: "hypershield:telemetry"
+hypershield_splunk_verify_ssl: true
+
+# Retention
+hypershield_retention_days: 90
+hypershield_retention_policy: "delete"  # delete, archive
+
+# Alerting
+hypershield_alerting_enabled: true
+hypershield_alert_rules: []
+# Example:
+#   - name: "agent_down"
+#     condition: "agent_status == 'unhealthy'"
+#     severity: "critical"
+#     threshold_duration: 300
+#   - name: "high_threat_volume"
+#     condition: "threat_count > 100"
+#     severity: "high"
+#     threshold_duration: 60
+
+# Compliance dashboards
+hypershield_compliance_dashboards_enabled: true
+hypershield_compliance_frameworks:
+  - "pci-dss"
+  - "hipaa"
+  - "nist-800-53"
+
+# Data pipeline
+hypershield_pipeline_buffer_size: 1000  # events
+hypershield_pipeline_flush_interval: 30  # seconds
+hypershield_pipeline_retry_count: 3
+hypershield_pipeline_retry_delay: 10  # seconds

@@ -1,0 +1,12 @@
+---
+- name: Restart telemetry pipeline
+  stevefulme1.cisco_hypershield.hypershield_telemetry:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    action: restart_pipeline
+
+- name: Reload Splunk integration
+  stevefulme1.cisco_hypershield.hypershield_splunk_integration:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    action: reload

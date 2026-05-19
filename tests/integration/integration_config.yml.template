@@ -1,0 +1,8 @@
+---
+# Cisco Hypershield API credentials for integration tests.
+# Copy this file to integration_config.yml and fill in your values.
+
+hypershield_api_url: "https://hypershield.example.com"
+hypershield_api_key: "YOUR_API_KEY_HERE"
+hypershield_validate_certs: true
+hypershield_timeout: 30

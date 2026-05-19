@@ -1,0 +1,23 @@
+---
+- name: Run validation tests on shadow dataplane
+  stevefulme1.cisco_hypershield.hypershield_update_confidence:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    update_id: "{{ _update_result.update_id }}"
+    validation_checks: "{{ hypershield_validation_checks }}"
+    timeout: "{{ hypershield_validation_timeout }}"
+  register: _validation_result
+
+- name: Report validation results
+  ansible.builtin.debug:
+    msg: >-
+      Validation complete.
+      Confidence score: {{ _validation_result.confidence_score | default(0) }}%,
+      Checks passed: {{ _validation_result.checks_passed | default([]) | join(', ') }},
+      Checks failed: {{ _validation_result.checks_failed | default([]) | join(', ') }}
+
+- name: Set upgrade decision fact
+  ansible.builtin.set_fact:
+    _upgrade_confidence_met: >-
+      {{ (_validation_result.confidence_score | default(0) | int)
+         >= (hypershield_confidence_threshold | int) }}

@@ -1,0 +1,23 @@
+---
+- name: Get current agent version information
+  stevefulme1.cisco_hypershield.hypershield_update_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    agent_group: "{{ hypershield_upgrade_agent_group }}"
+  register: _current_version
+
+- name: Report current version
+  ansible.builtin.debug:
+    msg: >-
+      Current version: {{ _current_version.current_version | default('unknown') }},
+      Target version: {{ hypershield_upgrade_target_version }},
+      Agents in scope: {{ _current_version.agent_count | default(0) }}
+
+- name: Check if upgrade is needed
+  ansible.builtin.assert:
+    that:
+      - _current_version.current_version is version(hypershield_upgrade_target_version, '<')
+    fail_msg: >-
+      Current version {{ _current_version.current_version | default('unknown') }}
+      is already at or above target {{ hypershield_upgrade_target_version }}
+    success_msg: "Upgrade from {{ _current_version.current_version }} to {{ hypershield_upgrade_target_version }} will proceed"

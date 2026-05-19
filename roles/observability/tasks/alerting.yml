@@ -1,0 +1,29 @@
+---
+- name: Validate alert rule severities
+  ansible.builtin.assert:
+    that:
+      - item.severity in hypershield_valid_severities
+    fail_msg: >-
+      Invalid severity '{{ item.severity }}' for alert '{{ item.name }}'.
+      Valid: {{ hypershield_valid_severities | join(', ') }}
+  loop: "{{ hypershield_alert_rules }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: hypershield_alert_rules | length > 0
+
+- name: Create alerting rules
+  stevefulme1.cisco_hypershield.hypershield_telemetry:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    alert_name: "{{ item.name }}"
+    alert_condition: "{{ item.condition }}"
+    alert_severity: "{{ item.severity }}"
+    alert_threshold_duration: "{{ item.threshold_duration | default(300) }}"
+    state: present
+  loop: "{{ hypershield_alert_rules }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Report alerting configuration
+  ansible.builtin.debug:
+    msg: "Configured {{ hypershield_alert_rules | length }} alert rules"

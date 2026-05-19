@@ -1,0 +1,37 @@
+---
+# Hypershield Tesseract agent deployment defaults
+
+# Management plane connection
+hypershield_management_plane_url: "https://hypershield.example.com"
+hypershield_api_token: ""
+
+# Agent package
+hypershield_agent_package: "hypershield-agent"
+hypershield_agent_version: "latest"
+
+# Agent configuration
+hypershield_enforcement_mode: "observe"  # observe, enforce, monitor
+hypershield_telemetry_enabled: true
+hypershield_telemetry_interval: 60  # seconds
+hypershield_log_level: "info"  # debug, info, warn, error
+
+# Registration
+hypershield_agent_group: "default"
+hypershield_agent_labels: {}
+hypershield_auto_register: true
+
+# Prerequisites
+hypershield_min_kernel_version: "5.10"
+hypershield_required_kernel_modules:
+  - "bpf"
+  - "bpf_jit"
+hypershield_connectivity_check_timeout: 30  # seconds
+
+# Service
+hypershield_service_name: "hypershield-agent"
+hypershield_service_enabled: true
+hypershield_service_state: "started"
+
+# Health check
+hypershield_health_check_retries: 5
+hypershield_health_check_delay: 10  # seconds

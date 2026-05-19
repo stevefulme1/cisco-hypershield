@@ -1,0 +1,35 @@
+---
+- name: Check kernel version meets minimum requirement
+  ansible.builtin.assert:
+    that:
+      - ansible_kernel is version(hypershield_min_kernel_version, '>=')
+    fail_msg: >-
+      Kernel version {{ ansible_kernel }} does not meet minimum
+      requirement {{ hypershield_min_kernel_version }}
+    success_msg: "Kernel version {{ ansible_kernel }} meets requirements"
+
+- name: Verify eBPF support is available
+  ansible.builtin.command:
+    cmd: ls /sys/fs/bpf
+  register: _bpf_check
+  changed_when: false
+  failed_when: _bpf_check.rc != 0
+
+- name: Check required kernel modules are loaded
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ hypershield_required_kernel_modules }}"
+  become: true
+
+- name: Test connectivity to management plane
+  ansible.builtin.uri:
+    url: "{{ hypershield_management_plane_url }}/api/v1/health"
+    method: GET
+    timeout: "{{ hypershield_connectivity_check_timeout }}"
+    status_code: [200, 401, 403]
+  register: _connectivity_check
+
+- name: Report connectivity status
+  ansible.builtin.debug:
+    msg: "Management plane connectivity verified (HTTP {{ _connectivity_check.status }})"

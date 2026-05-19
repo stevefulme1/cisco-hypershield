@@ -1,0 +1,40 @@
+---
+# Orchestrated agent upgrade via dual-dataplane defaults
+
+# Management plane connection
+hypershield_management_plane_url: "https://hypershield.example.com"
+hypershield_api_token: ""
+
+# Target version
+hypershield_upgrade_target_version: ""  # required - must be set explicitly
+
+# Dual-dataplane strategy
+hypershield_confidence_threshold: 85  # minimum confidence score to promote
+hypershield_rollback_on_failure: true
+hypershield_canary_percentage: 10  # percent of agents to upgrade first
+
+# Validation
+hypershield_validation_tests_enabled: true
+hypershield_validation_timeout: 600  # seconds to wait for validation
+hypershield_validation_checks:
+  - health_check
+  - policy_enforcement
+  - telemetry_flow
+  - connectivity
+
+# Promotion
+hypershield_auto_promote: false  # require manual confirmation to promote
+hypershield_promotion_wait: 300  # seconds to wait after canary before full rollout
+
+# Rollback
+hypershield_rollback_timeout: 300  # seconds
+hypershield_preserve_shadow_on_failure: true
+
+# Agent targeting
+hypershield_upgrade_agent_group: "all"
+hypershield_upgrade_exclude_agents: []
+
+# Notifications
+hypershield_upgrade_notify_on_start: true
+hypershield_upgrade_notify_on_complete: true
+hypershield_upgrade_notify_on_rollback: true

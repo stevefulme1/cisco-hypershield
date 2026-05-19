@@ -1,0 +1,58 @@
+---
+- name: Evaluate confidence score for promotion
+  ansible.builtin.debug:
+    msg: >-
+      Confidence: {{ _validation_result.confidence_score | default(0) }}%,
+      Threshold: {{ hypershield_confidence_threshold }}%,
+      Decision: {{ 'PROMOTE' if _upgrade_confidence_met | bool else 'ROLLBACK' }}
+
+- name: Promote shadow to production
+  stevefulme1.cisco_hypershield.hypershield_update_promote:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    update_id: "{{ _update_result.update_id }}"
+    state: promoted
+  when: _upgrade_confidence_met | bool
+  register: _promote_result
+
+- name: Report promotion success
+  ansible.builtin.debug:
+    msg: >-
+      Upgrade promoted to production successfully.
+      Version: {{ hypershield_upgrade_target_version }},
+      Agents updated: {{ _promote_result.agents_updated | default(0) }}
+  when:
+    - _upgrade_confidence_met | bool
+    - _promote_result is defined
+
+- name: Rollback on low confidence
+  stevefulme1.cisco_hypershield.hypershield_dual_dataplane:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    update_id: "{{ _update_result.update_id }}"
+    action: rollback
+    timeout: "{{ hypershield_rollback_timeout }}"
+  when:
+    - not (_upgrade_confidence_met | bool)
+    - hypershield_rollback_on_failure | bool
+  register: _rollback_result
+
+- name: Report rollback
+  ansible.builtin.debug:
+    msg: >-
+      Upgrade rolled back due to low confidence score
+      ({{ _validation_result.confidence_score | default(0) }}% < {{ hypershield_confidence_threshold }}%).
+      Previous version restored.
+  when:
+    - not (_upgrade_confidence_met | bool)
+    - hypershield_rollback_on_failure | bool
+
+- name: Fail if confidence not met and rollback disabled
+  ansible.builtin.fail:
+    msg: >-
+      Confidence score {{ _validation_result.confidence_score | default(0) }}%
+      below threshold {{ hypershield_confidence_threshold }}% and rollback is disabled.
+      Manual intervention required.
+  when:
+    - not (_upgrade_confidence_met | bool)
+    - not (hypershield_rollback_on_failure | bool)

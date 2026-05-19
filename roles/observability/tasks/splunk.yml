@@ -1,0 +1,38 @@
+---
+- name: Validate Splunk HEC token is provided
+  ansible.builtin.assert:
+    that:
+      - hypershield_splunk_hec_token | length > 0
+    fail_msg: "hypershield_splunk_hec_token must be set when Splunk integration is enabled"
+
+- name: Test Splunk HEC connectivity
+  ansible.builtin.uri:
+    url: "{{ hypershield_splunk_hec_url }}/services/collector/health/1.0"
+    method: GET
+    headers:
+      Authorization: "Splunk {{ hypershield_splunk_hec_token }}"
+    validate_certs: "{{ hypershield_splunk_verify_ssl }}"
+    status_code: [200]
+    timeout: 30
+  register: _splunk_health
+
+- name: Configure Splunk HEC integration
+  stevefulme1.cisco_hypershield.hypershield_splunk_integration:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    hec_url: "{{ hypershield_splunk_hec_url }}"
+    hec_token: "{{ hypershield_splunk_hec_token }}"
+    index: "{{ hypershield_splunk_index }}"
+    source: "{{ hypershield_splunk_source }}"
+    sourcetype: "{{ hypershield_splunk_sourcetype }}"
+    verify_ssl: "{{ hypershield_splunk_verify_ssl }}"
+    state: present
+  notify: Reload Splunk integration
+
+- name: Report Splunk integration status
+  ansible.builtin.debug:
+    msg: >-
+      Splunk HEC configured.
+      URL: {{ hypershield_splunk_hec_url }},
+      Index: {{ hypershield_splunk_index }},
+      Source: {{ hypershield_splunk_source }}

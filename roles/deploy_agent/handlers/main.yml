@@ -1,0 +1,11 @@
+---
+- name: Restart hypershield agent
+  ansible.builtin.service:
+    name: "{{ hypershield_service_name }}"
+    state: restarted
+  become: true
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+  become: true

@@ -1,0 +1,37 @@
+---
+# NVIDIA BlueField DPU security configuration defaults
+
+# Management plane connection
+hypershield_management_plane_url: "https://hypershield.example.com"
+hypershield_api_token: ""
+
+# DPU hardware
+hypershield_dpu_device_type: "bluefield-3"  # bluefield-2, bluefield-3
+hypershield_min_firmware_version: "24.40"
+
+# Offload configuration
+hypershield_offload_mode: "full"  # full, partial, disabled
+hypershield_offload_policies:
+  - microsegmentation
+  - exploit_protection
+  - telemetry
+
+# Agent on DPU
+hypershield_dpu_agent_package: "hypershield-agent-dpu"
+hypershield_dpu_agent_version: "latest"
+hypershield_dpu_enforcement_mode: "observe"
+
+# Performance
+hypershield_performance_monitoring: true
+hypershield_performance_baseline_duration: 300  # seconds to collect baseline
+hypershield_max_cpu_threshold: 80  # percent
+hypershield_max_memory_threshold: 85  # percent
+
+# Network
+hypershield_dpu_management_interface: "tmfifo_net0"
+hypershield_dpu_data_interfaces:
+  - "p0"
+  - "p1"
+
+# Service
+hypershield_dpu_service_name: "hypershield-dpu-agent"

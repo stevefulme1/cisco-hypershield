@@ -1,0 +1,21 @@
+---
+# Orchestrated Agent Upgrade via Dual-Dataplane
+
+- name: Validate upgrade target version is specified
+  ansible.builtin.assert:
+    that:
+      - hypershield_upgrade_target_version | length > 0
+    fail_msg: "hypershield_upgrade_target_version must be set"
+
+- name: Check current agent version
+  ansible.builtin.include_tasks: check_version.yml
+
+- name: Deploy update to shadow dataplane
+  ansible.builtin.include_tasks: deploy_shadow.yml
+
+- name: Run validation tests
+  ansible.builtin.include_tasks: validate.yml
+  when: hypershield_validation_tests_enabled | bool
+
+- name: Check confidence scores and promote or rollback
+  ansible.builtin.include_tasks: promote.yml

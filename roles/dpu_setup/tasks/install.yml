@@ -1,0 +1,40 @@
+---
+- name: Install Hypershield DPU agent package
+  ansible.builtin.dnf:
+    name: "{{ hypershield_dpu_agent_package }}-{{ hypershield_dpu_agent_version }}"
+    state: present
+  become: true
+  when: ansible_os_family == "RedHat"
+
+- name: Install Hypershield DPU agent package (Debian)
+  ansible.builtin.apt:
+    name: "{{ hypershield_dpu_agent_package }}={{ hypershield_dpu_agent_version }}"
+    state: present
+    update_cache: true
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Ensure DPU configuration directory exists
+  ansible.builtin.file:
+    path: "{{ hypershield_dpu_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: true
+
+- name: Configure DPU agent
+  stevefulme1.cisco_hypershield.hypershield_dpu_config:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    enforcement_mode: "{{ hypershield_dpu_enforcement_mode }}"
+    data_interfaces: "{{ hypershield_dpu_data_interfaces }}"
+    state: present
+  notify: Restart DPU agent
+
+- name: Enable and start DPU agent service
+  ansible.builtin.service:
+    name: "{{ hypershield_dpu_service_name }}"
+    enabled: true
+    state: started
+  become: true

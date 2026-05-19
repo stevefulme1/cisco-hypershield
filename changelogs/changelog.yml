@@ -1,0 +1,20 @@
+---
+ancestor: null
+releases:
+  1.0.0:
+    release_date: "2026-05-19"
+    changes:
+      release_summary: >-
+        Initial release of the stevefulme1.cisco_hypershield collection for managing
+        Cisco Hypershield infrastructure. Includes modules for policy management,
+        eBPF program lifecycle, DPU configuration, compliance enforcement, and
+        firewall rule automation. Also provides EDA integration, roles for
+        deployment and configuration, and inventory plugin support.
+      major_changes:
+        - Initial release with full module suite for Cisco Hypershield management.
+        - Event-Driven Ansible (EDA) event source and filter plugins.
+        - Roles for deployment, configuration, and compliance scanning.
+      minor_changes:
+        - Filter plugins for policy data transformation.
+        - Inventory plugin for discovering Hypershield-managed hosts.
+        - Doc fragment for shared authentication parameters.

@@ -1,0 +1,27 @@
+---
+- name: Configure telemetry collection
+  stevefulme1.cisco_hypershield.hypershield_telemetry:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    enabled: "{{ hypershield_telemetry_enabled }}"
+    interval: "{{ hypershield_telemetry_interval }}"
+    metrics: "{{ hypershield_telemetry_metrics }}"
+    retention_days: "{{ hypershield_retention_days }}"
+    retention_policy: "{{ hypershield_retention_policy }}"
+    buffer_size: "{{ hypershield_pipeline_buffer_size }}"
+    flush_interval: "{{ hypershield_pipeline_flush_interval }}"
+    state: present
+  notify: Restart telemetry pipeline
+
+- name: Verify telemetry configuration
+  stevefulme1.cisco_hypershield.hypershield_telemetry_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+  register: _telemetry_status
+
+- name: Report telemetry configuration
+  ansible.builtin.debug:
+    msg: >-
+      Telemetry: {{ 'enabled' if _telemetry_status.enabled | default(false) else 'disabled' }},
+      Metrics: {{ _telemetry_status.active_metrics | default([]) | join(', ') }},
+      Interval: {{ _telemetry_status.interval | default('unknown') }}s

@@ -1,0 +1,27 @@
+---
+- name: Validate policy actions
+  ansible.builtin.assert:
+    that:
+      - item.action in hypershield_valid_policy_actions
+    fail_msg: "Invalid policy action '{{ item.action }}' for policy '{{ item.name }}'"
+  loop: "{{ hypershield_policies }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: hypershield_policies | length > 0
+
+- name: Apply baseline microsegmentation policies
+  stevefulme1.cisco_hypershield.hypershield_microsegmentation_policy:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    name: "{{ item.name }}"
+    source_zone: "{{ item.source_zone }}"
+    destination_zone: "{{ item.destination_zone }}"
+    protocol: "{{ item.protocol | default('tcp') }}"
+    ports: "{{ item.ports | default([]) }}"
+    action: "{{ item.action | default(hypershield_default_policy_action) }}"
+    mode: "{{ hypershield_policy_mode }}"
+    state: present
+  loop: "{{ hypershield_policies }}"
+  loop_control:
+    label: "{{ item.name }}"
+  notify: Reload microsegmentation policies

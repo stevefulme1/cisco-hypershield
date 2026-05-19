@@ -1,0 +1,22 @@
+---
+- name: Set default inter-zone action
+  stevefulme1.cisco_hypershield.hypershield_zone_policy:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    default_action: "{{ hypershield_inter_zone_default_action }}"
+    state: present
+
+- name: Apply inter-zone rules
+  stevefulme1.cisco_hypershield.hypershield_network_rule:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    source_zone: "{{ item.source_zone }}"
+    destination_zone: "{{ item.destination_zone }}"
+    action: "{{ item.action | default('allow') }}"
+    protocol: "{{ item.protocol | default('any') }}"
+    ports: "{{ item.ports | default([]) }}"
+    state: present
+  loop: "{{ hypershield_inter_zone_rules }}"
+  loop_control:
+    label: "{{ item.source_zone }} -> {{ item.destination_zone }}"
+  notify: Reload zone policies

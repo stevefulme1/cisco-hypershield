@@ -1,0 +1,27 @@
+---
+- name: Register agent with management plane
+  stevefulme1.cisco_hypershield.hypershield_agent_registration:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    agent_group: "{{ hypershield_agent_group }}"
+    state: present
+  register: _registration_result
+
+- name: Apply agent labels
+  stevefulme1.cisco_hypershield.hypershield_agent_label:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    agent_id: "{{ _registration_result.agent_id }}"
+    labels: "{{ hypershield_agent_labels }}"
+    state: present
+  when: hypershield_agent_labels | length > 0
+
+- name: Add agent to group
+  stevefulme1.cisco_hypershield.hypershield_agent_group:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    name: "{{ hypershield_agent_group }}"
+    agents:
+      - "{{ _registration_result.agent_id }}"
+    state: present
+  when: hypershield_agent_group != "default"

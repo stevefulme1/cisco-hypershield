@@ -1,0 +1,35 @@
+---
+- name: Initiate dual-dataplane upgrade to shadow
+  stevefulme1.cisco_hypershield.hypershield_update:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    target_version: "{{ hypershield_upgrade_target_version }}"
+    strategy: "dual_dataplane"
+    canary_percentage: "{{ hypershield_canary_percentage }}"
+    agent_group: "{{ hypershield_upgrade_agent_group }}"
+    exclude_agents: "{{ hypershield_upgrade_exclude_agents }}"
+    state: present
+  register: _update_result
+
+- name: Report shadow deployment status
+  ansible.builtin.debug:
+    msg: >-
+      Shadow dataplane deployment initiated.
+      Update ID: {{ _update_result.update_id | default('unknown') }},
+      Canary agents: {{ _update_result.canary_count | default(0) }}
+
+- name: Wait for shadow dataplane to be ready
+  stevefulme1.cisco_hypershield.hypershield_dual_dataplane:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    update_id: "{{ _update_result.update_id }}"
+    wait_for: "shadow_ready"
+    timeout: "{{ hypershield_validation_timeout }}"
+  register: _shadow_status
+
+- name: Confirm shadow dataplane is ready
+  ansible.builtin.assert:
+    that:
+      - _shadow_status.shadow_ready | default(false)
+    fail_msg: "Shadow dataplane failed to become ready within timeout"
+    success_msg: "Shadow dataplane is ready for validation"

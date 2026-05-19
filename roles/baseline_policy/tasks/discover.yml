@@ -1,0 +1,28 @@
+---
+- name: Enable traffic discovery mode
+  stevefulme1.cisco_hypershield.hypershield_microsegmentation_policy:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    discovery_mode: true
+    discovery_duration: "{{ hypershield_discovery_duration }}"
+    discovery_protocols: "{{ hypershield_discovery_protocols }}"
+    state: present
+  register: _discovery_result
+
+- name: Report discovery status
+  ansible.builtin.debug:
+    msg: >-
+      Traffic discovery {{ 'enabled' if _discovery_result.changed else 'already active' }}.
+      Duration: {{ hypershield_discovery_duration }}s,
+      Protocols: {{ hypershield_discovery_protocols | join(', ') }}
+
+- name: Retrieve discovered traffic patterns
+  stevefulme1.cisco_hypershield.hypershield_microsegmentation_policy_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    include_discovered_flows: true
+  register: _discovered_flows
+
+- name: Report discovered flow count
+  ansible.builtin.debug:
+    msg: "Discovered {{ _discovered_flows.flows | default([]) | length }} unique traffic flows"

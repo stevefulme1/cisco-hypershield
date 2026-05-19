@@ -1,0 +1,82 @@
+---
+- name: Create a Hypershield agent
+  stevefulme1.cisco_hypershield.hypershield_agent:
+    api_url: "{{ hypershield_api_url }}"
+    api_key: "{{ hypershield_api_key }}"
+    validate_certs: "{{ hypershield_validate_certs }}"
+    name: integration-test-agent
+    host: 10.0.0.100
+    state: present
+    enforcement_mode: monitor
+    labels:
+      env: test
+      purpose: ci
+  register: create_result
+
+- name: Verify agent was created
+  ansible.builtin.assert:
+    that:
+      - create_result is changed
+      - create_result.agent.name == 'integration-test-agent'
+
+- name: Create same agent again (idempotency)
+  stevefulme1.cisco_hypershield.hypershield_agent:
+    api_url: "{{ hypershield_api_url }}"
+    api_key: "{{ hypershield_api_key }}"
+    validate_certs: "{{ hypershield_validate_certs }}"
+    name: integration-test-agent
+    host: 10.0.0.100
+    state: present
+    enforcement_mode: monitor
+    labels:
+      env: test
+      purpose: ci
+  register: idem_result
+
+- name: Verify idempotency
+  ansible.builtin.assert:
+    that:
+      - idem_result is not changed
+
+- name: Update agent enforcement mode
+  stevefulme1.cisco_hypershield.hypershield_agent:
+    api_url: "{{ hypershield_api_url }}"
+    api_key: "{{ hypershield_api_key }}"
+    validate_certs: "{{ hypershield_validate_certs }}"
+    agent_id: "{{ create_result.agent.id }}"
+    state: present
+    enforcement_mode: enforce
+  register: update_result
+
+- name: Verify agent was updated
+  ansible.builtin.assert:
+    that:
+      - update_result is changed
+
+- name: Delete the agent
+  stevefulme1.cisco_hypershield.hypershield_agent:
+    api_url: "{{ hypershield_api_url }}"
+    api_key: "{{ hypershield_api_key }}"
+    validate_certs: "{{ hypershield_validate_certs }}"
+    agent_id: "{{ create_result.agent.id }}"
+    state: absent
+  register: delete_result
+
+- name: Verify agent was deleted
+  ansible.builtin.assert:
+    that:
+      - delete_result is changed
+
+- name: Delete same agent again (idempotency)
+  stevefulme1.cisco_hypershield.hypershield_agent:
+    api_url: "{{ hypershield_api_url }}"
+    api_key: "{{ hypershield_api_key }}"
+    validate_certs: "{{ hypershield_validate_certs }}"
+    agent_id: "{{ create_result.agent.id }}"
+    state: absent
+  register: delete_idem_result
+
+- name: Verify delete idempotency
+  ansible.builtin.assert:
+    that:
+      - delete_idem_result is not changed

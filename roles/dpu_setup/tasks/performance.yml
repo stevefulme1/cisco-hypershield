@@ -1,0 +1,34 @@
+---
+- name: Collect performance baseline
+  stevefulme1.cisco_hypershield.hypershield_dpu_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    collect_baseline: true
+    baseline_duration: "{{ hypershield_performance_baseline_duration }}"
+  register: _baseline_result
+
+- name: Validate CPU usage within threshold
+  ansible.builtin.assert:
+    that:
+      - (_baseline_result.cpu_usage | default(0) | int) <= hypershield_max_cpu_threshold
+    fail_msg: >-
+      DPU CPU usage {{ _baseline_result.cpu_usage | default('unknown') }}%
+      exceeds threshold {{ hypershield_max_cpu_threshold }}%
+    success_msg: "DPU CPU usage within acceptable range"
+
+- name: Validate memory usage within threshold
+  ansible.builtin.assert:
+    that:
+      - (_baseline_result.memory_usage | default(0) | int) <= hypershield_max_memory_threshold
+    fail_msg: >-
+      DPU memory usage {{ _baseline_result.memory_usage | default('unknown') }}%
+      exceeds threshold {{ hypershield_max_memory_threshold }}%
+    success_msg: "DPU memory usage within acceptable range"
+
+- name: Report performance baseline
+  ansible.builtin.debug:
+    msg: >-
+      Performance baseline collected.
+      CPU: {{ _baseline_result.cpu_usage | default('N/A') }}%,
+      Memory: {{ _baseline_result.memory_usage | default('N/A') }}%,
+      Packets/sec: {{ _baseline_result.packets_per_second | default('N/A') }}

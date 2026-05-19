@@ -1,0 +1,22 @@
+---
+# Baseline Microsegmentation and Zone Policies
+
+- name: Discover existing traffic patterns
+  ansible.builtin.include_tasks: discover.yml
+  when: hypershield_discovery_enabled | bool
+
+- name: Review AI policy recommendations
+  ansible.builtin.include_tasks: recommendations.yml
+
+- name: Apply baseline allow-list policies
+  ansible.builtin.include_tasks: policies.yml
+
+- name: Create security zones
+  ansible.builtin.include_tasks: zones.yml
+
+- name: Set inter-zone rules
+  ansible.builtin.include_tasks: inter_zone.yml
+
+- name: Enable monitoring
+  ansible.builtin.include_tasks: monitoring.yml
+  when: hypershield_policy_monitoring_enabled | bool

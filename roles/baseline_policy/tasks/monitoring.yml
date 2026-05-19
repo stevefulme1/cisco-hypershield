@@ -1,0 +1,21 @@
+---
+- name: Enable policy monitoring
+  stevefulme1.cisco_hypershield.hypershield_microsegmentation_policy:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    monitoring_enabled: true
+    log_denied_traffic: "{{ hypershield_policy_log_denied }}"
+    state: present
+
+- name: Verify monitoring is active
+  stevefulme1.cisco_hypershield.hypershield_microsegmentation_policy_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+  register: _monitoring_status
+
+- name: Report monitoring status
+  ansible.builtin.debug:
+    msg: >-
+      Policy monitoring: {{ 'active' if _monitoring_status.monitoring_enabled | default(false) else 'inactive' }},
+      Mode: {{ hypershield_policy_mode }},
+      Denied logging: {{ 'enabled' if hypershield_policy_log_denied else 'disabled' }}

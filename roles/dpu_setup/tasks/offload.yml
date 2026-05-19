@@ -1,0 +1,21 @@
+---
+- name: Configure DPU offload mode
+  stevefulme1.cisco_hypershield.hypershield_dpu_config:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+    offload_mode: "{{ hypershield_offload_mode }}"
+    offload_policies: "{{ hypershield_offload_policies }}"
+    state: present
+  notify: Reload DPU offload policies
+
+- name: Verify offload policies are applied
+  stevefulme1.cisco_hypershield.hypershield_dpu_info:
+    management_plane_url: "{{ hypershield_management_plane_url }}"
+    api_token: "{{ hypershield_api_token }}"
+  register: _offload_status
+
+- name: Report offload configuration
+  ansible.builtin.debug:
+    msg: >-
+      DPU offload mode: {{ _offload_status.offload_mode | default('unknown') }},
+      Active policies: {{ _offload_status.active_policies | default([]) | join(', ') }}

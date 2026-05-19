@@ -1,0 +1,6 @@
+---
+# Internal variables - do not override
+
+hypershield_agent_config_dir: "/etc/hypershield"
+hypershield_agent_config_file: "{{ hypershield_agent_config_dir }}/agent.conf"
+hypershield_agent_service_file: "/etc/systemd/system/{{ hypershield_service_name }}.service"

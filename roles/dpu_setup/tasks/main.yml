@@ -1,0 +1,18 @@
+---
+# NVIDIA BlueField DPU Security Configuration
+
+- name: Validate DPU hardware and firmware
+  ansible.builtin.include_tasks: validate.yml
+
+- name: Install Hypershield agent on DPU
+  ansible.builtin.include_tasks: install.yml
+
+- name: Configure offload policies
+  ansible.builtin.include_tasks: offload.yml
+
+- name: Set performance baselines
+  ansible.builtin.include_tasks: performance.yml
+  when: hypershield_performance_monitoring | bool
+
+- name: Verify offload is active
+  ansible.builtin.include_tasks: verify.yml
