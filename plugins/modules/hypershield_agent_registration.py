@@ -51,13 +51,13 @@ options:
     description:
       - Name for the registration token when I(state=token).
     type: str
-  token_expiry_hours:
+  expiry_hours:
     description:
       - How many hours until the registration token expires.
       - Only used when I(state=token).
     type: int
     default: 24
-  token_max_uses:
+  max_uses:
     description:
       - Maximum number of agents that can register with this token.
       - Set to 0 for unlimited uses.
@@ -122,8 +122,8 @@ EXAMPLES = r"""
     api_key: "{{ vault_api_key }}"
     state: token
     token_name: datacenter-rollout-q3
-    token_expiry_hours: 72
-    token_max_uses: 50
+    expiry_hours: 72
+    max_uses: 50
   register: token_result
 
 - name: Deregister an agent and clean up data
@@ -199,8 +199,8 @@ def handle_token_state(api, module):
     """Create or retrieve a registration token."""
     payload = {
         "name": module.params.get("token_name", "ansible-generated"),
-        "expiry_hours": module.params["token_expiry_hours"],
-        "max_uses": module.params["token_max_uses"],
+        "expiry_hours": module.params["expiry_hours"],
+        "max_uses": module.params["max_uses"],
     }
     if module.check_mode:
         return dict(changed=True, token=payload)
@@ -272,8 +272,8 @@ def main():
         host=dict(type="str"),
         registration_token=dict(type="str", no_log=True),
         token_name=dict(type="str"),
-        token_expiry_hours=dict(type="int", default=24),
-        token_max_uses=dict(type="int", default=1),
+        expiry_hours=dict(type="int", default=24),
+        max_uses=dict(type="int", default=1),
         auto_approve=dict(type="bool", default=True),
         labels=dict(type="dict", default={}),
         group_id=dict(type="str"),

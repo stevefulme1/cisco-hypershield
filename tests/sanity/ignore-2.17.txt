@@ -1,1 +1,0 @@
-plugins/modules/hypershield_agent_registration.py validate-modules:no-log-needed
