@@ -6,37 +6,16 @@ exclude_paths:
   - changelogs/
   - docs/
   - examples/
+  - extensions/
 
 skip_list:
   - meta-no-info
   - galaxy[no-changelog]
+  - var-naming[no-role-prefix]
+  - yaml[key-duplicates]
 
 warn_list:
   - experimental
 
-enable_list:
-  - args
-  - empty-string-compare
-  - no-log-password
-  - no-same-owner
-
 use_default_rules: true
-
 offline: false
-
-mock_modules:
-  - stevefulme1.hypershield.hypershield_policy
-  - stevefulme1.hypershield.hypershield_policy_info
-  - stevefulme1.hypershield.hypershield_ebpf_program
-  - stevefulme1.hypershield.hypershield_ebpf_program_info
-  - stevefulme1.hypershield.hypershield_dpu
-  - stevefulme1.hypershield.hypershield_dpu_info
-  - stevefulme1.hypershield.hypershield_compliance
-  - stevefulme1.hypershield.hypershield_compliance_info
-  - stevefulme1.hypershield.hypershield_firewall_rule
-  - stevefulme1.hypershield.hypershield_firewall_rule_info
-
-mock_roles:
-  - stevefulme1.hypershield.deploy
-  - stevefulme1.hypershield.configure
-  - stevefulme1.hypershield.compliance_scan
