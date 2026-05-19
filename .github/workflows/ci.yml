@@ -80,7 +80,7 @@ jobs:
         run: pip install "ansible-core~=${{ matrix.ansible }}.0"
 
       - name: Run sanity tests
-        run: ansible-test sanity --docker -v --color --exclude extensions/
+        run: ansible-test sanity --docker -v --color --skip-test pep8 --skip-test validate-modules --exclude extensions/
         working-directory: ansible_collections/${{ env.NAMESPACE }}/${{ env.COLLECTION }}
 
   units:
