@@ -1,93 +1,27 @@
-# Contributing to stevefulme1.hypershield
+# WELCOME TO ANSIBLE GITHUB
 
-Thank you for your interest in contributing to the Cisco Hypershield Ansible
-collection. This document provides guidelines for contributing.
+Hi! Nice to see you here!
 
-## Getting Started
+## QUESTIONS ?
 
-1. Fork the repository
-2. Clone your fork locally
-3. Create a feature branch from `main`
-4. Make your changes
-5. Submit a pull request
+Please see the [Community Guide](https://docs.ansible.com/ansible/latest/community/index.html) for information on how to ask questions on the [mailing lists](https://docs.ansible.com/ansible/latest/community/communication.html#mailing-list-information) and IRC.
 
-## Development Environment
+The GitHub issue tracker is not the best place for questions for various reasons, but both IRC and the mailing list are very helpful places for those things, as the community page explains best.
 
-```bash
-# Create a virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
+## CONTRIBUTING ?
 
-# Install dependencies
-pip install -r requirements.txt
-pip install ansible-lint yamllint pytest pytest-ansible
+By contributing to this project you agree to the Developer Certificate of Origin (DCO). This document was created by the Linux Kernel community and is a simple statement that you, as a contributor, have the legal right to make the contribution.
 
-# Install the collection in development mode
-mkdir -p ~/.ansible/collections/ansible_collections/stevefulme1
-ln -s "$(pwd)" ~/.ansible/collections/ansible_collections/stevefulme1/hypershield
-```
+You can read more about the [DCO and Contributor License Agreements](https://docs.ansible.com/ansible/latest/community/collection_contributors/collection_requirements.html#contributor-license-agreements) on the Ansible docsite.
 
-## Code Standards
+Please review the [Community Guide](https://docs.ansible.com/ansible/latest/community/index.html) for more information on contributing to Ansible.
 
-### Modules
+## BUG TO REPORT ?
 
-- Every module must include `DOCUMENTATION`, `EXAMPLES`, and `RETURN` docstrings
-- Module `argument_spec` must match `DOCUMENTATION` options exactly
-- Include GPL-3.0-or-later license header
-- Use `AnsibleModule` from `ansible.module_utils.basic`
-- Support check mode where applicable
-- Use `no_log=True` for sensitive parameters
+First and foremost, also check the [Community Guide](https://docs.ansible.com/ansible/latest/community/index.html).
 
-### Roles
+You can report bugs or make enhancement requests at the [Ansible GitHub issue page](http://github.com/ansible/ansible/issues/new/choose) by filling out the issue template that will be presented.
 
-- Include `meta/main.yml` with role metadata
-- Include `README.md` with usage examples
-- Use `defaults/main.yml` for all configurable variables
-- Prefix all role variables with the role name
+Also please make sure you are testing on the latest released version of Ansible or the development branch; see the [Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) for details.
 
-### Tests
-
-- Unit tests go in `tests/unit/plugins/modules/`
-- Integration tests go in `tests/integration/targets/`
-- All new modules require corresponding unit tests
-
-## Linting
-
-Run linters before submitting:
-
-```bash
-ansible-lint
-yamllint .
-```
-
-## Commit Messages
-
-Use conventional commit format:
-
-```
-type(scope): description
-
-feat(modules): add hypershield_policy module
-fix(module_utils): handle API timeout correctly
-docs(README): update installation instructions
-test(unit): add tests for hypershield_dpu module
-```
-
-## Pull Request Process
-
-1. Update documentation for any changed functionality
-2. Add or update tests as needed
-3. Ensure all linters pass
-4. Update CHANGELOG.md with your changes
-5. Request review from a maintainer
-
-## Reporting Issues
-
-- Use GitHub Issues for bug reports and feature requests
-- Include Ansible version, Python version, and collection version
-- Provide minimal reproducible examples when possible
-
-## License
-
-By contributing, you agree that your contributions will be licensed under the
-GPL-3.0-or-later license.
+Thanks!
