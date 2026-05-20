@@ -1,7 +1,7 @@
 ---
 namespace: stevefulme1
 name: cisco_hypershield
-version: 1.1.0
+version: 0.1.0
 readme: README.md
 authors:
   - Steve Fulmer <sfulmer@redhat.com>
@@ -9,6 +9,7 @@ description: >-
   Ansible Collection for Cisco Hypershield distributed security platform.
   Provides modules for Tesseract agent management, microsegmentation policy,
   exploit protection, DPU offload, observability, and Event-Driven Ansible integration.
+  Status: Pre-release. Under active development.
 license:
   - GPL-3.0-or-later
 license_file: LICENSE
